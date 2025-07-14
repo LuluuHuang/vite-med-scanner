@@ -43,7 +43,7 @@ export const useDrugStore = defineStore("drugStore", () => {
   //載入csv data
   const loadCsv = async () => {
     if (drugs.value.length > 0) return;
-    const res = await fetch("/fda.csv");
+    const res = await fetch(import.meta.env.BASE_URL + "fda.csv");
     const csv = await res.text();
 
     Papa.parse(csv, {
