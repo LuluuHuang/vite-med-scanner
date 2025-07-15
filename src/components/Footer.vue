@@ -1,3 +1,7 @@
 <template>
-    <p>頁尾</p>
+    <footer>
+        <div class="flex justify-center">
+            <p>© 2025 LuluHuang</p>
+        </div>
+    </footer>
 </template>
