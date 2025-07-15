@@ -5,6 +5,8 @@ const previewUrl = ref(null);
 const ocrResult = ref("");
 const isLoading = ref(false);
 const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+const BASE_URL = import.meta.env.BASE_URL;
+
 // 圖片轉 base64
 function convertToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -177,7 +179,7 @@ async function handleFileChange(event) {
           英文品名: i?.["英文品名"] || "未知藥品",
           中文品名: i?.["中文品名"] || "查無資料",
           適應症: i?.["適應症"] || "無相關資料",
-          img: "/images/no_image.jpeg",
+          img: `${BASE_URL}images/no_image.jpeg`,
         };
       }
       const img = await drugStore.getDrugImg(i["許可證字號"]);

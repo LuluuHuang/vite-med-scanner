@@ -2,6 +2,7 @@ import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import Papa from "papaparse";
+const BASE_URL = import.meta.env.BASE_URL
 
 interface Drug {
   中文品名: string;
@@ -43,7 +44,7 @@ export const useDrugStore = defineStore("drugStore", () => {
   //載入csv data
   const loadCsv = async () => {
     if (drugs.value.length > 0) return;
-    const res = await fetch(import.meta.env.BASE_URL + "fda.csv");
+    const res = await fetch(BASE_URL + "fda.csv");
     const csv = await res.text();
 
     Papa.parse(csv, {
@@ -97,7 +98,7 @@ export const useDrugStore = defineStore("drugStore", () => {
         中文品名: "查無資料",
         適應症: "無相關資料",
         許可證字號: "",
-        img: "/images/no_image.jpeg", // 可以自訂一張預設圖
+        img: `${BASE_URL}images/no_image.jpeg`, // 可以自訂一張預設圖
       };
     }
 
@@ -113,11 +114,11 @@ export const useDrugStore = defineStore("drugStore", () => {
         return res.data[0]["外觀圖檔連結"];
       } else {
         console.log("no data");
-        return "/images/no_image.jpeg";
+        return `${BASE_URL}images/no_image.jpeg`;
       }
     } catch (error) {
       console.error("Error fetching attribute data:", error);
-      return "/images/no_image.jpeg";
+      return `${BASE_URL}images/no_image.jpeg`;
     }
   };
 
