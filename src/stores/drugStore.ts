@@ -91,14 +91,13 @@ export const useDrugStore = defineStore("drugStore", () => {
         .includes(keyword)
     );
 
-    // 如果找不到，回傳一個 fallback 資料
     if (!found) {
       return {
         英文品名: name,
         中文品名: "查無資料",
         適應症: "無相關資料",
         許可證字號: "",
-        img: `${BASE_URL}images/no_image.jpeg`, // 可以自訂一張預設圖
+        img: `${BASE_URL}images/no_image.jpeg`,
       };
     }
 

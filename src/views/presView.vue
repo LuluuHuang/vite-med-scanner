@@ -81,7 +81,6 @@ const routeAbbreviations = new Set([
   "IVP",
 ]);
 
-// 清除函式
 function clearOcrResult() {
   ocrResult.value = "";
   previewUrl.value = null;
@@ -92,12 +91,10 @@ async function handleFileChange(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  // 圖片預覽
   if (previewUrl.value) URL.revokeObjectURL(previewUrl.value);
   previewUrl.value = URL.createObjectURL(file);
   const base64 = await convertToBase64(file);
 
-  // OCR 開始辨識
   isLoading.value = true;
   ocrResult.value = "";
 
@@ -127,10 +124,9 @@ async function handleFileChange(event) {
       return ele !== "";
     })
     .filter((item) => {
-      const hasEnglish = /[a-zA-Z]/.test(item); // 至少有英文
-      const isChineseOnly = /^[\u4e00-\u9fa5\s:;，、。、（）()]+$/.test(item); // 全中文
-      const isOnlyNumber = /^[\d\s.,]+$/.test(item); // 純數字（含空白、小數點）
-      // 👉 判斷是否為縮寫（整行是縮寫或縮寫加雜訊）
+      const hasEnglish = /[a-zA-Z]/.test(item);
+      const isChineseOnly = /^[\u4e00-\u9fa5\s:;，、。、（）()]+$/.test(item);
+      const isOnlyNumber = /^[\d\s.,]+$/.test(item);
       const tokens = item
         .toUpperCase()
         .split(/\s|:|，|。|\(|\)/)
@@ -138,7 +134,6 @@ async function handleFileChange(event) {
       const hasRouteCode = tokens.some((token) =>
         routeAbbreviations.has(token)
       );
-      // 🔴 排除包含 [] 或 [xxx] 的項目
       const hasBrackets = /\[.*\]/.test(item);
 
       return (
@@ -158,14 +153,12 @@ async function handleFileChange(event) {
         .replace(/外用/g, "")
         .replace(/每日[一二三四五六七八九\d]+次/g, "")
         .replace(/每日上午使用/g, "")
-        // ✅ 刪除括號與裡面的內容（例如 (BUMETANIDE)）
         .replace(/\([^)]*\)/g, "")
-        // ✅ 刪除雙引號與裡面的內容（例如 "ROOT"）
         .replace(/"[^"]*"/g, "")
         .replace(/\(\s*[^)]*$/, "")
         .replace(/\(\s*[^)]*\)/g, "")
-        .replace(/\b\d+(\.\d+)?\s*(MG|ML|G|MCG|KG|IU)\b/gi, "") // ← ✅ 劑量
-        .replace(/\b\d+(\.\d+)?\b/g, "") // ← ✅ 純數字
+        .replace(/\b\d+(\.\d+)?\s*(MG|ML|G|MCG|KG|IU)\b/gi, "")
+        .replace(/\b\d+(\.\d+)?\b/g, "")
         .replace(/\s{2,}/g, " ")
         .trim()
     )
