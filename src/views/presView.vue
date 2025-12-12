@@ -117,7 +117,7 @@ async function handleFileChange(event) {
       }),
     }
   );
-  const result = await response.json();
+  const result = await response.json();  
   const filteredResult = result.responses[0].fullTextAnnotation.text
     .split("\n")
     .filter((ele) => {
@@ -143,13 +143,16 @@ async function handleFileChange(event) {
         !hasRouteCode &&
         !hasBrackets
       );
-    })
+    })    
     .map((item) =>
       item
         .replace(/一天[一二三四五六七八九\d]+次/g, "")
         .replace(/每[日早中晚]{1,2}服用一次/g, "")
         .replace(/睡前服用一次/g, "")
         .replace(/內服/g, "")
+        .replace(/錠x\d+x\d+/, "")
+        // .replace(/[一二三四五六七八九\d]+錠/g, "")
+        // .replace(/粒/g, "")
         .replace(/外用/g, "")
         .replace(/每日[一二三四五六七八九\d]+次/g, "")
         .replace(/每日上午使用/g, "")
@@ -165,6 +168,8 @@ async function handleFileChange(event) {
     .map((i, index) => {
       return drugStore.findDrugByPhoto(i);
     });
+    console.log('filteredResult',filteredResult);
+    
   const drugsImgPath = await Promise.all(
     filteredResult.map(async (i, index) => {
       if (!i || !i["許可證字號"]) {
