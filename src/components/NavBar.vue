@@ -4,5 +4,6 @@
     <!-- <router-link to="/" class="text-blue-500 hover:underline">首頁</router-link> -->
     <router-link to="/searchView" class="text-blue-500 hover:underline">藥品查詢</router-link>
     <router-link to="/presView" class="text-blue-500 hover:underline">處方簽查詢</router-link>
+    <router-link to="/remindView" class="text-blue-500 hover:underline">用藥提醒</router-link>
   </nav>
 </template>

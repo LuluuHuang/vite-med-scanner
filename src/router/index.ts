@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 // import homeView from "../views/homeView.vue";
 import searchView from "../views/searchView.vue";
 import presView from "../views/presView.vue";
+import remindView from "../views/remindView.vue";
 
 const routes = [
   {
@@ -19,6 +20,11 @@ const routes = [
     path: "/presView",
     name: "presView",
     component: presView,
+  },
+  {
+    path: "/remindView",
+    name: "remindView",
+    component: remindView,
   },
 ];
 
