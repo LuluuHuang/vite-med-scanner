@@ -23,6 +23,7 @@ const drugStore = useDrugStore();
 const result = ref();
 onMounted(async () => {
   await drugStore.loadCsv();
+  await drugStore.loadImgDataCsv();
   const saved = localStorage.getItem("ocrResult");
   if (saved) {
     try {

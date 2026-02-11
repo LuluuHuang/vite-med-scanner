@@ -4,6 +4,7 @@ import { useDrugStore } from "../stores/drugStore";
 const drugStore = useDrugStore();
 onMounted(async () => {
   await drugStore.loadCsv();
+  await drugStore.loadImgDataCsv();
 });
 const search = async () => {
   const result = await drugStore.findDrugByName(drugStore.searchDrugs);

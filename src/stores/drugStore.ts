@@ -1,4 +1,4 @@
-import axios from "axios";
+// import axios from "axios";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import Papa from "papaparse";
@@ -36,9 +36,25 @@ interface Drug {
   [key: string]: any;
 }
 
+interface DrugImg {
+  許可證字號: string,
+  中文品名: string,
+  英文品名: string,
+  形狀: string,
+  特殊劑型: string,
+  顏色: string,
+  特殊氣味: string,
+  刻痕: string,
+  外觀尺寸: string,
+  標註一: string,
+  標註二: string,
+  外觀圖檔連結: string,
+}
+
 export const useDrugStore = defineStore("drugStore", () => {
   const searchDrugs = ref<string>("");
   const drugs = ref<Drug[]>([]);
+  const DrugImg = ref<DrugImg[]>([]);
   const resultDrug = ref<Drug[]>([]);
 
   //載入csv data
@@ -52,6 +68,19 @@ export const useDrugStore = defineStore("drugStore", () => {
       skipEmptyLines: true,
       complete: (results: any) => {
         drugs.value = results.data;
+      },
+    });
+  };
+  //載入img data
+  const loadImgDataCsv = async () => {
+    const res = await fetch(BASE_URL + "imgData.csv");
+    const csv = await res.text();
+
+    Papa.parse(csv, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results: any) => {
+        DrugImg.value = results.data;
       },
     });
   };
@@ -104,25 +133,38 @@ export const useDrugStore = defineStore("drugStore", () => {
     return found;
   };
 
-  const getDrugImg = async (number: any) => {
-    try {
-      const res = await axios.get(
-        `https://data.fda.gov.tw/opendata/exportDataList.do?method=openData&InfoId=42&許可證字號=${number}`
-      );
-      if (Array.isArray(res.data) && res.data.length > 0) {
-        return res.data[0]["外觀圖檔連結"];
-      } else {
-        console.log("no data");
-        return `${BASE_URL}images/no_image.jpeg`;
-      }
-    } catch (error) {
-      console.error("Error fetching attribute data:", error);
-      return `${BASE_URL}images/no_image.jpeg`;
-    }
-  };
+  // const getDrugImg = async (number: any) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `https://data.fda.gov.tw/opendata/exportDataList.do?method=openData&InfoId=42&許可證字號=${number}`
+  //     );
+  //     if (Array.isArray(res.data) && res.data.length > 0) {
+  //       return res.data[0]["外觀圖檔連結"];
+  //     } else {
+  //       console.log("no data");
+  //       return `${BASE_URL}images/no_image.jpeg`;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching attribute data:", error);
+  //     return `${BASE_URL}images/no_image.jpeg`;
+  //   }
+  // };
+
+const getDrugImg = (licenseNumber:any) => {
+  const found = DrugImg.value.find((row)=>{
+    return row["許可證字號"].includes(licenseNumber);
+  })
+  if(found){
+    return found["外觀圖檔連結"];
+  }else{
+    return `${BASE_URL}images/no_image.jpeg`
+  }
+};
+
 
   return {
     loadCsv,
+    loadImgDataCsv,
     findDrugByName,
     findDrugByPhoto,
     resultDrug,
